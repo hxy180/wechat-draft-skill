@@ -1,0 +1,10 @@
+{
+  "title": "示例：如何把一篇 HTML 文章写入公众号草稿箱",
+  "author": "",
+  "digest": "这是一个仅用于演示字段结构的草稿示例。",
+  "content": "<h2>示例文章</h2><p>将这里替换为已经排版完成的 HTML 正文。</p><p><strong>请在创建草稿前确认标题、封面和来源。</strong></p>",
+  "content_source_url": "https://example.com",
+  "thumb_media_id": "替换为 upload-cover 返回的 media_id",
+  "need_open_comment": 0,
+  "only_fans_can_comment": 0
+}
