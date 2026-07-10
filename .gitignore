@@ -1,0 +1,23 @@
+# Python bytecode and local environments
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.venv/
+venv/
+env/
+
+# Local credentials and article materials
+.env
+.env.*
+*.secret
+article.json
+cover.jpg
+cover.jpeg
+cover.png
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
