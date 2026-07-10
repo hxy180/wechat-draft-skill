@@ -1,0 +1,4 @@
+interface:
+  display_name: "WeChat Draft Skill"
+  short_description: "Create WeChat Official Account drafts safely."
+  default_prompt: "Validate my WeChat configuration and create a draft without publishing."
