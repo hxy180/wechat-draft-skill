@@ -10,7 +10,8 @@
 
 ```powershell
 python scripts/wechat_draft.py doctor
-python C:\Users\侯晓宇\.codex\skills\.system\skill-creator\scripts\quick_validate.py .
+# 仅在维护 Codex Skill 时运行；替换为你自己的 Codex 安装目录
+python "$env:USERPROFILE\.codex\skills\.system\skill-creator\scripts\quick_validate.py" .
 ```
 
 4. 在 Pull Request 中说明变更内容、验证方式及其是否影响 API 请求。
