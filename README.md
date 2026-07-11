@@ -1,14 +1,14 @@
-# WeChat Draft Skill
+# WeChat Draft Agent Kit
 
 > 把已写好的公众号 HTML，安全地送进微信公众平台草稿箱。
 
-`wechat-draft-skill` 是一个可被 [Codex](https://openai.com/codex/) 发现和调用的 Skill，也可以作为一个零依赖的 Python 命令行工具单独使用。它通过微信公众平台官方接口完成两件事：上传文章封面图、创建图文草稿。
+`wechat-draft-skill` 是一个可被任何具备本地命令执行能力的 AI 工具使用的公众号草稿工具包。它包含零依赖 Python 命令行、通用 AI 指令文件和 Codex 原生 Skill 入口，通过微信公众平台官方接口上传图片、创建或更新图文草稿。
 
 它**只创建草稿**。仓库中没有群发、发布、删除或修改已发布文章的实现，因此你仍然可以在公众号后台人工检查内容后再决定是否发布。
 
 ## 适合谁
 
-- 用 Codex 写公众号文章，希望最后一步自动进入草稿箱的内容创作者；
+- 用 ChatGPT、Claude、Cursor、Codex 或自建 Agent 写公众号文章，希望最后一步自动进入草稿箱的内容创作者；
 - 已有公众号后台权限，想用脚本把 HTML 文章交给编辑审核的团队；
 - 希望把“写作 → 排版 → 草稿箱”拆成可复用流程的开发者。
 
@@ -20,23 +20,23 @@
 | --- | --- | --- |
 | 检查环境 | `doctor` | 确认本机是否已配置凭据 |
 | 上传封面 | `upload-cover` | 返回可用于草稿的 `media_id` |
+| 上传正文图片 | `upload-image` | 返回公众号正文可用的图片地址 |
 | 创建草稿 | `create-draft` | 返回公众号草稿的 `media_id` |
+| 更新草稿 | `update-draft` | 修复现有草稿的正文或图片 |
 | 群发 / 发布 | 不支持 | 始终保留人工审核环节 |
 
 ## 30 秒快速开始
 
-### 1. 安装
+### 1. 获取工具
 
 在 PowerShell 中执行：
 
 ```powershell
-git clone https://github.com/hxy180/wechat-draft-skill.git "$env:USERPROFILE\.codex\skills\wechat-draft-skill"
-cd "$env:USERPROFILE\.codex\skills\wechat-draft-skill"
+git clone https://github.com/hxy180/wechat-draft-skill.git
+cd wechat-draft-skill
 ```
 
-重启 Codex 后，它会自动发现这个 Skill。若只想以命令行方式使用，不需要重启，保持在仓库目录即可。
-
-> Windows 默认安装位置为 `C:\Users\你的用户名\.codex\skills\wechat-draft-skill`。macOS / Linux 可克隆到 `~/.codex/skills/wechat-draft-skill`。
+该工具不依赖 Codex。只要 AI 工具能读取 [AGENTS.md](AGENTS.md) 并在本机运行 Python 命令，就可以使用它。
 
 ### 2. 配置公众号凭据
 
@@ -97,6 +97,14 @@ python scripts/wechat_draft.py upload-cover .\cover.jpg
 
 成功输出中的 `media_id` 是创建草稿必须的封面标识。请复制它，但不要把它当作公开链接使用。
 
+### 上传正文图片
+
+公众号草稿不应依赖外部图片链接。先把每一张正文图片上传到公众号素材库，再将返回结果里的 `url` 写入 HTML 的 `<img src="...">`：
+
+```powershell
+python scripts/wechat_draft.py upload-image .\official-image.png
+```
+
 ### 第三步：建立文章描述文件
 
 复制 [examples/article.example.json](examples/article.example.json) 为 `article.json`，然后替换标题、摘要、正文和 `thumb_media_id`：
@@ -126,6 +134,22 @@ python scripts/wechat_draft.py create-draft .\article.json
 ```
 
 这个命令不会发送文章，也不会自动发布。它只会创建一份草稿，供你在公众号后台继续审核。
+
+## 在任意 AI 工具中使用
+
+把仓库中的 [AGENTS.md](AGENTS.md) 作为项目规则或上下文文件加载，再把 [prompts/wechat-draft-agent.md](prompts/wechat-draft-agent.md) 的内容粘贴给 AI。任何能读取文件并运行本地 Python 命令的工具都可复用同一流程。
+
+AI 必须先确认目标公众号和文章标题，再执行任何上传或创建草稿命令；不得读取、输出或要求用户在聊天中提供 AppSecret。
+
+## Codex 专用安装（可选）
+
+如果你使用 Codex，可将仓库克隆到 Codex Skill 目录：
+
+```powershell
+git clone https://github.com/hxy180/wechat-draft-skill.git "$env:USERPROFILE\.codex\skills\wechat-draft-skill"
+```
+
+重启 Codex 后会自动发现根目录的 `SKILL.md`。
 
 ## 在 Codex 中怎么说
 
