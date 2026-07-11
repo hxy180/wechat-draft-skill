@@ -19,6 +19,7 @@ Use `scripts/wechat_draft.py` to create a draft through the official WeChat Offi
 ```powershell
 python scripts/wechat_draft.py doctor
 python scripts/wechat_draft.py upload-cover cover.jpg
+python scripts/wechat_draft.py upload-image image.jpg
 python scripts/wechat_draft.py create-draft article.json
 python scripts/wechat_draft.py update-draft update.json
 ```
