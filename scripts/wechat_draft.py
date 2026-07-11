@@ -90,6 +90,8 @@ sub = parser.add_subparsers(dest="command", required=True)
 sub.add_parser("doctor")
 cover = sub.add_parser("upload-cover")
 cover.add_argument("file")
+image = sub.add_parser("upload-image")
+image.add_argument("file")
 draft = sub.add_parser("create-draft")
 draft.add_argument("article_json")
 update = sub.add_parser("update-draft")
@@ -99,7 +101,7 @@ args = parser.parse_args()
 if args.command == "doctor":
     missing = [key for key in ("WECHAT_APPID", "WECHAT_SECRET") if not os.getenv(key)]
     output({"ok": not missing, "draft_supported": not missing, "publish_supported": False, "missing": missing})
-elif args.command == "upload-cover":
+elif args.command in ("upload-cover", "upload-image"):
     upload_cover(args.file)
 elif args.command == "create-draft":
     create_draft(args.article_json)
