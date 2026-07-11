@@ -20,9 +20,12 @@ Use `scripts/wechat_draft.py` to create a draft through the official WeChat Offi
 python scripts/wechat_draft.py doctor
 python scripts/wechat_draft.py upload-cover cover.jpg
 python scripts/wechat_draft.py create-draft article.json
+python scripts/wechat_draft.py update-draft update.json
 ```
 
 `article.json` must include `title`, `content`, and `thumb_media_id`. It may include `author`, `digest`, `content_source_url`, `need_open_comment`, and `only_fans_can_comment`.
+
+Use `update-draft` only to correct an existing draft after confirming the target draft and article title in the current turn. Its JSON must include `media_id`, `index`, and an `article` object with the same required fields. Upload every inline article image to permanent WeChat material first, then replace external image URLs in `content` with the returned WeChat material URLs before creating or updating a draft.
 
 ## Local credentials
 

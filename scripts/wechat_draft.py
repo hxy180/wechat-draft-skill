@@ -69,6 +69,22 @@ def create_draft(path):
     result = json_request(f"{API}/draft/add?access_token={token()}", {"articles": [{key: value for key, value in article.items() if key in allowed}]})
     output({"ok": True, "status": "draft_created", "media_id": result.get("media_id")})
 
+def update_draft(path):
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    media_id, index, article = payload.get("media_id"), payload.get("index"), payload.get("article")
+    if not media_id or index is None or not isinstance(article, dict):
+        output({"ok": False, "error": "Update JSON requires media_id, index, and article"}, 1)
+    missing = [key for key in ("title", "content", "thumb_media_id") if not article.get(key)]
+    if missing:
+        output({"ok": False, "error": "Article missing fields", "missing": missing}, 1)
+    allowed = {"title", "author", "digest", "content", "content_source_url", "thumb_media_id", "need_open_comment", "only_fans_can_comment"}
+    result = json_request(f"{API}/draft/update?access_token={token()}", {
+        "media_id": media_id,
+        "index": index,
+        "articles": {key: value for key, value in article.items() if key in allowed},
+    })
+    output({"ok": True, "status": "draft_updated", "errcode": result.get("errcode", 0)})
+
 parser = argparse.ArgumentParser(description="WeChat draft-only client")
 sub = parser.add_subparsers(dest="command", required=True)
 sub.add_parser("doctor")
@@ -76,6 +92,8 @@ cover = sub.add_parser("upload-cover")
 cover.add_argument("file")
 draft = sub.add_parser("create-draft")
 draft.add_argument("article_json")
+update = sub.add_parser("update-draft")
+update.add_argument("update_json")
 args = parser.parse_args()
 
 if args.command == "doctor":
@@ -83,5 +101,7 @@ if args.command == "doctor":
     output({"ok": not missing, "draft_supported": not missing, "publish_supported": False, "missing": missing})
 elif args.command == "upload-cover":
     upload_cover(args.file)
-else:
+elif args.command == "create-draft":
     create_draft(args.article_json)
+else:
+    update_draft(args.update_json)
